@@ -11,6 +11,6 @@
 
 ## What is Heliotrope
 
-Heliotrope is a private API that handles hitomi.la using python and sanic framework.
+Heliotrope is a private API that handles hitomi.la, etc. using python and sanic framework.
 
 This is the main api used by Hiyobot
