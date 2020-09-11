@@ -1,6 +1,6 @@
 # Rose
 
-> Heliotrope's asynchronous Python wrapper
+> Heliotrope's Python wrapper
 
 ## Badge
 
