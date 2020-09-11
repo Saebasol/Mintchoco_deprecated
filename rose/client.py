@@ -37,7 +37,7 @@ class _Client:
 
     async def download(self, index: int, download=False):
         response = await self.request(
-            "GET", "/api/download", {"index": index, "download": download}
+            "POST", "/api/download", {"index": index, "download": download}
         )
         return Download(response)
 
