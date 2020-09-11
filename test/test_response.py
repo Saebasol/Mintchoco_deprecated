@@ -21,7 +21,7 @@ async def test_integrated(rose_client):
 
 @pytest.mark.asyncio
 async def test_list_(rose_client):
-    response = await rose_client.galleryinfo(1)
+    response = await rose_client.list(1)
     assert response
 
 
