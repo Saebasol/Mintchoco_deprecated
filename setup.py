@@ -7,6 +7,6 @@ setup(name="Rose",
       version="1.3.0",
       packages=setuptools.find_packages(),
       description="Heliotrope python wrapper",
-      install_requires=["aiohttp"]
+      install_requires=["aiohttp"],
       python_requires=">=3.6"
 )
