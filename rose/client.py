@@ -4,7 +4,7 @@ from typing import Any
 
 import aiohttp
 
-from .model import GalleryInfo, Info, Integrated, List_, Download, Register
+from .model import Download, GalleryInfo, Info, Integrated, List_, Register
 
 
 class _Client:
