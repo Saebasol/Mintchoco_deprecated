@@ -4,7 +4,7 @@ from typing import Any
 
 import aiohttp
 
-from .model import GalleryInfo, Info, Integrated, List_, Download, Register
+from .model import Download, GalleryInfo, Info, Integrated, List_, Register
 
 
 class _Client:
@@ -35,7 +35,7 @@ class _Client:
         response = await self.request("GET", f"/api/hitomi/list/{number}")
         return List_(response)
 
-    async def download(self, user_id: int, index: int, download=False):
+    async def download(self, index: int, user_id: int = None, download: bool = False):
         response = await self.request(
             "POST",
             "/api/download",
