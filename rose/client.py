@@ -49,7 +49,7 @@ class _Client:
         return Register(response)
 
     async def progress(self, user_id: int):
-        response = await self.request("GET", f"/api/progress{user_id}")
+        response = await self.request("GET", f"/api/progress/{user_id}")
         return Progress(response)
 
 
