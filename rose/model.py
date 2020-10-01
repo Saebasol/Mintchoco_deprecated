@@ -95,5 +95,10 @@ class List_(HeliotropeResponse):
 class Download(HeliotropeResponse):
     pass
 
+
 class Register(HeliotropeResponse):
+    pass
+
+
+class Progress(HeliotropeResponse):
     pass
