@@ -13,7 +13,7 @@ class _Client:
 
     async def request(self, method, endpoint, json=None):
         headers = {"Authorization": self.authorization}
-        url = "https://doujinshiman.ga" + "v2" + endpoint
+        url = "https://doujinshiman.ga/" + "v2" + endpoint
         async with aiohttp.ClientSession() as cs:
             async with cs.request(method, url, headers=headers, json=json) as r:
                 response = await r.json()
