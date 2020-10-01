@@ -4,8 +4,7 @@ from typing import Any
 
 import aiohttp
 
-from .model import (Download, GalleryInfo, Info, Integrated, List_, Progress,
-                    Register)
+from .model import Download, GalleryInfo, Info, Integrated, List_, Progress, Register
 
 
 class _Client:
@@ -44,8 +43,10 @@ class _Client:
         )
         return Download(response)
 
-    async def register(self, user_id: int):
-        response = await self.request("POST", "/api/register", {"user_id": user_id})
+    async def register(self, user_id: int, check: bool = False):
+        response = await self.request(
+            "POST", "/api/register", {"user_id": user_id, "check": check}
+        )
         return Register(response)
 
     async def progress(self, user_id: int):
