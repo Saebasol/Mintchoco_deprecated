@@ -1,6 +1,5 @@
-from typing import Any
-
 import json
+from typing import Any
 
 
 class AttributeDict:
@@ -95,5 +94,10 @@ class List_(HeliotropeResponse):
 class Download(HeliotropeResponse):
     pass
 
+
 class Register(HeliotropeResponse):
+    pass
+
+
+class Progress(HeliotropeResponse):
     pass

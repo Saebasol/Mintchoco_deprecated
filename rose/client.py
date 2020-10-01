@@ -4,7 +4,8 @@ from typing import Any
 
 import aiohttp
 
-from .model import Download, GalleryInfo, Info, Integrated, List_, Register
+from .model import (Download, GalleryInfo, Info, Integrated, List_, Progress,
+                    Register)
 
 
 class _Client:
@@ -13,7 +14,7 @@ class _Client:
 
     async def request(self, method, endpoint, json=None):
         headers = {"Authorization": self.authorization}
-        url = "https://doujinshiman.ga" + endpoint
+        url = "https://doujinshiman.ga/" + "v2" + endpoint
         async with aiohttp.ClientSession() as cs:
             async with cs.request(method, url, headers=headers, json=json) as r:
                 response = await r.json()
@@ -46,6 +47,10 @@ class _Client:
     async def register(self, user_id: int):
         response = await self.request("POST", "/api/register", {"user_id": user_id})
         return Register(response)
+
+    async def progress(self, user_id: int):
+        response = await self.request("GET", f"/api/progress{user_id}")
+        return Progress(response)
 
 
 class Client(_Client):
