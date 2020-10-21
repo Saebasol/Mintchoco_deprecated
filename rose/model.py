@@ -101,7 +101,3 @@ class Register(HeliotropeResponse):
 
 class Progress(HeliotropeResponse):
     pass
-
-
-class Index(HeliotropeResponse):
-    pass
