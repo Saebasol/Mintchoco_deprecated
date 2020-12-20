@@ -91,17 +91,8 @@ class List_(HeliotropeResponse):
     pass
 
 
-class Download(HeliotropeResponse):
-    pass
-
-
-class Register(HeliotropeResponse):
-    pass
-
-
-class Progress(HeliotropeResponse):
-    pass
-
-
 class Index(HeliotropeResponse):
+    pass
+
+class Images(HeliotropeResponse):
     pass

@@ -4,16 +4,7 @@ from typing import Any
 
 import aiohttp
 
-from .model import (
-    Download,
-    GalleryInfo,
-    Index,
-    Info,
-    Integrated,
-    List_,
-    Progress,
-    Register,
-)
+from .model import GalleryInfo, Index, Info, Integrated, List_, Images
 
 
 class _Client:
@@ -22,7 +13,7 @@ class _Client:
 
     async def request(self, method, endpoint, json=None):
         headers = {"Authorization": self.authorization}
-        url = "https://doujinshiman.ga/" + "v2" + endpoint
+        url = "https://doujinshiman.ga/" + "v3" + endpoint
         async with aiohttp.ClientSession() as cs:
             async with cs.request(method, url, headers=headers, json=json) as r:
                 response = await r.json()
@@ -48,23 +39,9 @@ class _Client:
         response = await self.request("GET", f"/api/hitomi/index")
         return Index(response)
 
-    async def download(self, index: int, user_id: int = None, download: bool = False):
-        response = await self.request(
-            "POST",
-            "/api/download",
-            {"user_id": user_id, "index": index, "download": download},
-        )
-        return Download(response)
-
-    async def register(self, user_id: int, check: bool = False):
-        response = await self.request(
-            "POST", "/api/register", {"user_id": user_id, "check": check}
-        )
-        return Register(response)
-
-    async def progress(self, user_id: int):
-        response = await self.request("GET", f"/api/progress/{user_id}")
-        return Progress(response)
+    async def images(self, index: int):
+        response = await self.request("GET", f"/api/hitomi/images/{index}")
+        return Images(response)
 
 
 class Client(_Client):
