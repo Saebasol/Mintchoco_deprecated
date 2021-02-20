@@ -1,98 +1,102 @@
-import json
-from typing import Any
+from __future__ import annotations
+
+from typing import Any, Iterator, Optional
 
 
-class AttributeDict:
-    def __init__(self, value={}, **kwargs):
-        if isinstance(value, list):
-            self.value = [
-                self.__make(Item) if isinstance(Item, dict) else Item for Item in value
-            ]
-        else:
-            self.value = dict(value, **kwargs)
-
-    def __len__(self) -> int:
-        return len(self.value)
-
-    def __str__(self) -> str:
-        return json.dumps(self.value, default=lambda x: x.__dict__())
-
-    def __repr__(self) -> str:
-        return self.value.__repr__()
-
-    def __dict__(self) -> dict:
-        return self.value
-
-    def __bool__(self) -> bool:
-        return bool(self.value)
-
-    def __getattr__(self, name: str) -> Any:
-        if isinstance(self.value, list):
-            return self.value[name]
-
-        return self.__get(name)
-
-    def __getitem__(self, key: str) -> Any:
-        return self.__getattr__(key)
-
-    def __contains__(self, element: Any) -> bool:
-        return element in self.value
-
-    def __get(self, name: str) -> Any:
-        Value = self.value.get(name)
-
-        if name in self.value:
-            if isinstance(Value, dict):
-                Value = self.__make(Value)
-            elif isinstance(Value, list):
-                Value = [
-                    Item if not isinstance(Item, dict) else self.__make(Item)
-                    for Item in Value
-                ]
-            elif isinstance(Value, tuple):
-                Value = (
-                    Item if not isinstance(Item, dict) else self.__make(Item)
-                    for Item in Value
-                )
-            elif isinstance(Value, set):
-                Value = {
-                    Item if not isinstance(Item, dict) else self.__make(Item)
-                    for Item in Value
-                }
-        else:
-            if hasattr(name, self.value):
-                Value = getattr(name, self.value)
-
-        return Value
+class HeliotropeFile:
+    def __init__(self, **file: Any):
+        self.to_dict = file
+        self.width: str = file["width"]
+        self.hash: str = file["hash"]
+        self.haswebp: Optional[bool] = bool(file["haswebp"])
+        self.hasavifsmalltn: Optional[bool] = bool(file["hasavifsmalltn"])
+        self.name: str = file["name"]
+        self.height: str = file["height"]
+        self.hasavif: Optional[bool] = bool(file["hasavif"])
 
     @classmethod
-    def __make(cls, *args, **kwargs):
-        return cls(*args, **kwargs)
+    def parsing(
+        cls, value_datas: dict[str, list[dict[str, str]]], key: str
+    ) -> Iterator[HeliotropeFile]:
+        for value_data in value_datas[key]:
+            yield cls(**value_data)
 
 
-class HeliotropeResponse(AttributeDict):
-    def __init__(self, response: dict):
-        super().__init__(response)
+class HeliotropeValueData:
+    def __init__(self, **tag: Any) -> None:
+        self.to_dict = tag
+        self.value = tag["value"]
+        self.tag = tag["tag"]
+
+    @classmethod
+    def parsing(
+        cls, value_datas: dict[str, list[dict[str, str]]], key: str
+    ) -> Iterator[HeliotropeValueData]:
+        for value_data in value_datas[key]:
+            yield cls(**value_data)
 
 
-class GalleryInfo(HeliotropeResponse):
-    pass
+class HeliotropeImage:
+    def __init__(self, **data: Any) -> None:
+        self.to_dict = data
+        self.url: str = data["url"]
+        self.filename: str = data["filename"]
+
+    @classmethod
+    def parsing(
+        cls, value_datas: dict[str, list[dict[str, str]]], key: str
+    ) -> Iterator[HeliotropeImage]:
+        for value_data in value_datas[key]:
+            yield cls(**value_data)
 
 
-class Info(HeliotropeResponse):
-    pass
+class HeliotropeGalleryInfo:
+    def __init__(self, **data: Any) -> None:
+        self.to_dict = data
+        self.status: int = data["status"]
+        self.language_localname: str = data["language_localname"]
+        self.language: str = data["language"]
+        self.date: str = data["date"]
+        self.files = HeliotropeFile.parsing(data, "files")
+        self.tags = HeliotropeValueData.parsing(data, "tags")
+        self.japanese_title: str = data["japanese_title"]
+        self.title: str = data["title"]
+        self.id: str = data["id"]
+        self.type: str = data["type"]
 
 
-class Integrated(HeliotropeResponse):
-    pass
+class HeliotropeInfo:
+    def __init__(self, **data: Any) -> None:
+        self.to_dict = data
+        self.status: int = data["status"]
+        self.title = HeliotropeValueData.parsing(data, "title")
+        self.galleyid = data["galleryid"]
+        self.artist = HeliotropeValueData.parsing(data, "artist")
+        self.group = HeliotropeValueData.parsing(data, "group")
+        self.type = HeliotropeValueData.parsing(data, "type")
+        self.language = HeliotropeValueData.parsing(data, "language")
+        self.series = HeliotropeValueData.parsing(data, "series")
+        self.characters = HeliotropeValueData.parsing(data, "characters")
+        self.tags = HeliotropeValueData.parsing(data, "tags")
 
 
-class List_(HeliotropeResponse):
-    pass
+class HeliotropeIntegrated:
+    def __init__(self, **data: Any) -> None:
+        self.to_dict = data
+        self.data: tuple[
+            Optional[HeliotropeGalleryInfo], Optional[HeliotropeInfo]
+        ] = tuple(data["data"])
 
 
-class Index(HeliotropeResponse):
-    pass
+class HeliotropeList:
+    def __init__(self, **data: Any) -> None:
+        self.to_dict = data
+        self.status: int = data["status"]
+        self.list: list[HeliotropeInfo] = data["list"]
 
-class Images(HeliotropeResponse):
-    pass
+
+class HeliotropeImages:
+    def __init__(self, **data: Any) -> None:
+        self.to_dict = data
+        self.status: int = data["status"]
+        self.images = HeliotropeImage.parsing(data, "images")
