@@ -26,7 +26,7 @@ class HeliotropeValueData:
     def __init__(self, **tag: Any) -> None:
         self.to_dict = tag
         self.value = tag["value"]
-        self.tag = tag["tag"]
+        self.url = tag["url"]
 
     @classmethod
     def parsing(
