@@ -71,6 +71,7 @@ class HeliotropeInfo:
         self.status: int = data["status"]
         self.title = HeliotropeValueData.parsing(data, "title")
         self.galleyid = data["galleryid"]
+        self.thumbnail: str = data["thumbnail"]
         self.artist = HeliotropeValueData.parsing(data, "artist")
         self.group = HeliotropeValueData.parsing(data, "group")
         self.type = HeliotropeValueData.parsing(data, "type")

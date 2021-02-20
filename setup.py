@@ -6,7 +6,7 @@ setup(
     author="Ryu ju heon",
     author_email="SaidBySolo@gmail.com",
     url="https://github.com/SaidBySolo/Rose",
-    version="3.0.2",
+    version="3.0.3",
     packages=setuptools.find_packages(),  # type: ignore
     description="Heliotrope python wrapper",
     install_requires=["aiohttp"],
