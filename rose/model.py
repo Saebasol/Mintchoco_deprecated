@@ -70,7 +70,7 @@ class HeliotropeInfo:
         self.to_dict = data
         self.status: int = data["status"]
         self.title = HeliotropeValueData.parsing(data, "title")
-        self.galleyid = data["galleryid"]
+        self.galleryid = data["galleryid"]
         self.thumbnail: str = data["thumbnail"]
         self.artist = HeliotropeValueData.parsing(data, "artist")
         self.group = HeliotropeValueData.parsing(data, "group")
