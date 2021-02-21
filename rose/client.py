@@ -8,7 +8,6 @@ from rose.model import (
     HeliotropeGalleryInfo,
     HeliotropeImages,
     HeliotropeInfo,
-    HeliotropeIntegrated,
     HeliotropeList,
 )
 
@@ -34,11 +33,6 @@ class Client:
 
     async def info(self, index: int) -> HeliotropeInfo:
         return HeliotropeInfo(**await self.request("GET", f"/api/hitomi/info/{index}"))
-
-    async def integrated(self, index: int) -> HeliotropeIntegrated:
-        return HeliotropeIntegrated(
-            **await self.request("GET", f"/api/hitomi/integrated/{index}")
-        )
 
     async def list_(self, number: int) -> HeliotropeList:
         return HeliotropeList(**await self.request("GET", f"/api/hitomi/list/{number}"))
