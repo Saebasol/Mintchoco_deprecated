@@ -44,3 +44,6 @@ class Client:
         return HeliotropeImages(
             **await self.request("GET", f"/api/hitomi/images/{index}")
         )
+
+    async def ranking(self) -> list[int]:
+        return await self.request("GET", "/api/ranking")
