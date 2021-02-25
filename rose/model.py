@@ -263,7 +263,7 @@ class HeliotropeRankingInfo:
     @property
     def index(self) -> str:
         return self.__index
-    
+
     @property
     def count(self) -> int:
         return self.__count
