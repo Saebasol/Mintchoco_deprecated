@@ -253,3 +253,32 @@ class HeliotropeImages:
     def images(self) -> Iterator[HeliotropeImage]:
         for image in self.__images:
             yield HeliotropeImage(**image)
+
+
+class HeliotropeRankingInfo:
+    def __init__(self, **data: Any) -> None:
+        self.__index = data["index"]
+        self.__count = data["count"]
+
+    @property
+    def index(self) -> str:
+        return self.__index
+
+    @property
+    def count(self) -> int:
+        return self.__count
+
+
+class HeliotropeRanking:
+    def __init__(self, **data: Any) -> None:
+        self.__count = data["count"]
+        self.__list = data["list"]
+
+    @property
+    def count(self) -> int:
+        return self.__count
+
+    @property
+    def ranking(self) -> HeliotropeRankingInfo:
+        for info in self.__list:
+            yield HeliotropeRankingInfo(**info)
