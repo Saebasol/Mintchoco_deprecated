@@ -9,6 +9,7 @@ from rose.model import (
     HeliotropeImages,
     HeliotropeInfo,
     HeliotropeList,
+    HeliotropeRanking,
 )
 
 
@@ -45,5 +46,5 @@ class Client:
             **await self.request("GET", f"/api/hitomi/images/{index}")
         )
 
-    async def ranking(self) -> list[int]:
-        return await self.request("GET", "/api/ranking")
+    async def ranking(self) -> HeliotropeRanking:
+        return HeliotropeRanking(**await self.request("GET", "/api/ranking"))
