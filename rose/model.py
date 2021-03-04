@@ -271,8 +271,9 @@ class HeliotropeRankingInfo:
 
 class HeliotropeRanking:
     def __init__(self, **data: Any) -> None:
-        self.__count = data["count"]
+        self.__count = data["total"]
         self.__list = data["list"]
+        self.__month = data["month"]
 
     @property
     def count(self) -> int:
@@ -282,3 +283,7 @@ class HeliotropeRanking:
     def ranking(self) -> HeliotropeRankingInfo:
         for info in self.__list:
             yield HeliotropeRankingInfo(**info)
+
+    @property
+    def month(self) -> int:
+        return self.__month
