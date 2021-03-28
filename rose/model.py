@@ -18,7 +18,7 @@ class HeliotropeFile:
         return self.__file
 
     @property
-    def width(self) -> str:
+    def width(self) -> int:
         return self.__width
 
     @property
@@ -26,11 +26,11 @@ class HeliotropeFile:
         return self.__hash
 
     @property
-    def haswebp(self) -> Optional[bool]:
+    def haswebp(self) -> int:
         return bool(self.__haswebp)
 
     @property
-    def hasavifsmalltn(self) -> Optional[bool]:
+    def hasavifsmalltn(self) -> int:
         return bool(self.__hasavifsmalltn)
 
     @property
@@ -38,11 +38,11 @@ class HeliotropeFile:
         return self.__name
 
     @property
-    def height(self) -> str:
+    def height(self) -> int:
         return self.__height
 
     @property
-    def hasavif(self) -> Optional[bool]:
+    def hasavif(self) -> int:
         return bool(self.__hasavif)
 
     @classmethod
@@ -51,6 +51,34 @@ class HeliotropeFile:
     ) -> Iterator[HeliotropeFile]:
         for value_data in value_datas[key]:
             yield cls(**value_data)
+
+
+class HeliotropeTagData:
+    def __init__(self, **tags: Any) -> None:
+        self.__tags = tags
+        self.__male = tags["male"]
+        self.__female = tags["female"]
+        self.__tag = tags["tag"]
+        self.__url = tags["url"]
+
+    def to_dict(self) -> dict[str, Any]:
+        return self.__tags
+
+    @property
+    def male(self) -> str:
+        return self.__male
+
+    @property
+    def female(self) -> str:
+        return self.__female
+
+    @property
+    def tag(self) -> str:
+        return self.__tag
+
+    @property
+    def url(self) -> str:
+        return self.__url
 
 
 class HeliotropeValueData:
@@ -73,34 +101,34 @@ class HeliotropeValueData:
 
 class HeliotropeImage:
     def __init__(self, **image: Any) -> None:
-        self.__image = image
-        self.__url = image["url"]
-        self.__filename = image["filename"]
+        self.__data = image
+        self.__name = image["name"]
+        self.__image = image["image"]
 
     def to_dict(self) -> dict[str, Any]:
+        return self.__data
+
+    @property
+    def name(self) -> str:
+        return self.__name
+
+    @property
+    def image(self) -> str:
         return self.__image
-
-    @property
-    def filename(self) -> str:
-        return self.__filename
-
-    @property
-    def url(self) -> str:
-        return self.__url
 
 
 class HeliotropeGalleryInfo:
     def __init__(self, **data: Any) -> None:
         self.__data = data
         self.__status = data["status"]
-        self.__language_localname = data["language_localname"]
+        self.__id = data["id"]
         self.__language = data["language"]
+        self.__language_localname = data["language_localname"]
         self.__date = data["date"]
         self.__files = data["files"]
         self.__tags = data["tags"]
         self.__japanese_title = data["japanese_title"]
         self.__title = data["title"]
-        self.__id = data["id"]
         self.__type = data["type"]
 
     def to_dict(self) -> dict[str, Any]:
@@ -111,12 +139,16 @@ class HeliotropeGalleryInfo:
         return self.__status
 
     @property
-    def language_localname(self) -> str:
-        return self.__language_localname
+    def id(self) -> str:
+        return self.__id
 
     @property
     def language(self) -> str:
         return self.__language
+
+    @property
+    def language_localname(self) -> str:
+        return self.__language_localname
 
     @property
     def date(self) -> str:
@@ -128,9 +160,9 @@ class HeliotropeGalleryInfo:
             yield HeliotropeFile(**file)
 
     @property
-    def tags(self) -> Iterator[HeliotropeValueData]:
-        for tag in self.__tags:
-            yield HeliotropeValueData(**tag)
+    def tags(self) -> Iterator[HeliotropeTagData]:
+        for tags in self.__tags:
+            yield HeliotropeTagData(**tags)
 
     @property
     def japanese_title(self) -> Optional[str]:
@@ -141,10 +173,6 @@ class HeliotropeGalleryInfo:
         return self.__title
 
     @property
-    def id(self) -> str:
-        return self.__id
-
-    @property
     def type(self) -> str:
         return self.__type
 
@@ -152,9 +180,7 @@ class HeliotropeGalleryInfo:
 class HeliotropeInfo:
     def __init__(self, **data: Any) -> None:
         self.__data = data
-        self.__status = data["status"]
         self.__title = data["title"]
-        self.__galleryid = data["galleryid"]
         self.__thumbnail = data["thumbnail"]
         self.__artist = data["artist"]
         self.__group = data["group"]
@@ -163,21 +189,14 @@ class HeliotropeInfo:
         self.__series = data["series"]
         self.__characters = data["characters"]
         self.__tags = data["tags"]
+        self.__status = data.get("status")
 
     def to_dict(self) -> dict[str, Any]:
         return self.__data
 
     @property
-    def status(self) -> int:
-        return self.__status
-
-    @property
-    def title(self) -> HeliotropeValueData:
-        return HeliotropeValueData(**self.__title)
-
-    @property
-    def galleryid(self) -> str:
-        return self.__galleryid
+    def title(self) -> str:
+        return self.__title
 
     @property
     def thumbnail(self) -> str:
@@ -208,19 +227,23 @@ class HeliotropeInfo:
 
     @property
     def characters(self) -> Iterator[HeliotropeValueData]:
-        for character in self.__characters:
-            yield HeliotropeValueData(**character)
+        for character_value in self.__characters:
+            yield HeliotropeValueData(**character_value)
 
     @property
     def tags(self) -> Iterator[HeliotropeValueData]:
-        for tag in self.__tags:
-            yield HeliotropeValueData(**tag)
+        for tag_value in self.__tags:
+            yield HeliotropeValueData(**tag_value)
+
+    @property
+    def status(self) -> int:
+        return self.__status
 
 
 class HeliotropeList:
     def __init__(self, **data: Any) -> None:
         self.__data = data
-        self.__status: int = data["status"]
+        self.__status = data["status"]
         self.__list = data["list"]
 
     def to_dict(self) -> dict[str, Any]:
@@ -239,51 +262,64 @@ class HeliotropeList:
 class HeliotropeImages:
     def __init__(self, **data: Any) -> None:
         self.__data = data
-        self.__status = data["status"]
-        self.__images = data["images"]
+        self.__files = data["files"]
 
     def to_dict(self) -> dict[str, Any]:
         return self.__data
 
     @property
-    def status(self) -> int:
-        return self.__status
-
-    @property
-    def images(self) -> Iterator[HeliotropeImage]:
-        for image in self.__images:
-            yield HeliotropeImage(**image)
+    def files(self) -> Iterator[HeliotropeImage]:
+        for file in self.__files:
+            yield HeliotropeImage(**file)
 
 
-class HeliotropeRankingInfo:
+class HeliotropeCountInfo:
     def __init__(self, **data: Any) -> None:
+        self.__data = data
         self.__index = data["index"]
+        self.__title = data["title"]
         self.__count = data["count"]
+
+    def to_dict(self) -> dict[str, Any]:
+        return self.__data
 
     @property
     def index(self) -> str:
         return self.__index
 
     @property
+    def title(self) -> str:
+        return self.__title
+
+    @property
     def count(self) -> int:
         return self.__count
 
 
-class HeliotropeRanking:
+class HeliotropeCount:
     def __init__(self, **data: Any) -> None:
-        self.__count = data["total"]
-        self.__list = data["list"]
-        self.__month = data["month"]
+        self.__data = data
+        self.__total = data.get("total")
+        self.__list = data.get("list")
+        self.__message = data.get("message")
+        self.__status = data["status"]
+
+    def to_dict(self) -> dict[str, Any]:
+        return self.__data
 
     @property
-    def count(self) -> int:
-        return self.__count
+    def total(self) -> int:
+        return self.__total
 
     @property
-    def ranking(self) -> HeliotropeRankingInfo:
+    def ranking(self) -> Iterator[HeliotropeCountInfo]:
         for info in self.__list:
-            yield HeliotropeRankingInfo(**info)
+            yield HeliotropeCountInfo(**info)
 
     @property
-    def month(self) -> int:
-        return self.__month
+    def message(self) -> str:
+        return self.__message
+
+    @property
+    def status(self) -> int:
+        return self.__status

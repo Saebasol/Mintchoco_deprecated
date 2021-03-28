@@ -9,21 +9,20 @@ from rose.model import (
     HeliotropeImages,
     HeliotropeInfo,
     HeliotropeList,
-    HeliotropeRanking,
+    HeliotropeCount,
 )
 
 
 class Client:
-    def __init__(self, authorization: str):
-        self.authorization = authorization
+    def __init__(self, headers: dict = None) -> None:
+        self.headers = headers
 
     async def request(
         self, method: str, path: str, json: Optional[dict[str, Any]] = None
     ) -> Any:
-        headers = {"Authorization": self.authorization}
-        url = "https://doujinshiman.ga/" + "v3" + path
-        async with aiohttp.ClientSession() as cs:
-            async with cs.request(method, url, headers=headers, json=json) as r:
+        url = "http://localhost:8000/" + "v4" + path
+        async with aiohttp.ClientSession(headers=self.headers) as cs:
+            async with cs.request(method, url, json=json) as r:
                 response = await r.json()
                 return response
 
@@ -38,13 +37,10 @@ class Client:
     async def list_(self, number: int) -> HeliotropeList:
         return HeliotropeList(**await self.request("GET", f"/api/hitomi/list/{number}"))
 
-    async def index(self) -> list[int]:
-        return await self.request("GET", f"/api/hitomi/index")
-
     async def images(self, index: int) -> HeliotropeImages:
         return HeliotropeImages(
             **await self.request("GET", f"/api/hitomi/images/{index}")
         )
 
-    async def ranking(self) -> HeliotropeRanking:
-        return HeliotropeRanking(**await self.request("GET", "/api/ranking"))
+    async def count(self) -> HeliotropeCount:
+        return HeliotropeCount(**await self.request("GET", "/api/count"))
