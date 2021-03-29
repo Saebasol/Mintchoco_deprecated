@@ -20,7 +20,7 @@ class Client:
     async def request(
         self, method: str, path: str, json: Optional[dict[str, Any]] = None
     ) -> Any:
-        url = "http://localhost:8000/" + "v4" + path
+        url = "http://doujinshiman.ga/" + "v4" + path
         async with aiohttp.ClientSession(headers=self.headers) as cs:
             async with cs.request(method, url, json=json) as r:
                 response = await r.json()
