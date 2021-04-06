@@ -5,6 +5,7 @@ from typing import Any, Optional
 import aiohttp
 
 from rose.model import (
+    HeliotropeAbout,
     HeliotropeGalleryInfo,
     HeliotropeImages,
     HeliotropeInfo,
@@ -44,3 +45,6 @@ class Client:
 
     async def count(self) -> HeliotropeCount:
         return HeliotropeCount(**await self.request("GET", "/api/count"))
+
+    async def about(self) -> HeliotropeAbout:
+        return HeliotropeAbout(**await self.request("GET", "/about?json=True"))

@@ -323,3 +323,31 @@ class HeliotropeCount:
     @property
     def status(self) -> int:
         return self.__status
+
+
+class HeliotropeAbout:
+    def __init__(self, **data: Any) -> None:
+        self.__data = data
+        self.__last_checked_time = data["last_checked_time"]
+        self.__last_mirrored_time = data["last_mirrored_time"]
+        self.__new_item = data["new_item"]
+        self.__server_status = data["server_status"]
+
+    def to_dict(self) -> dict[str, str]:
+        return self.__data
+
+    @property
+    def last_checked_time(self) -> str:
+        return self.__last_checked_time
+
+    @property
+    def last_mirrored_time(self) -> str:
+        return self.__last_mirrored_time
+
+    @property
+    def new_item(self) -> str:
+        return self.__new_item
+
+    @property
+    def server_status(self) -> str:
+        return self.__server_status
