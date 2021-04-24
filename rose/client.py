@@ -1,27 +1,22 @@
 from __future__ import annotations
+from rose.model import HeliotropeGalleryInfo, HeliotropeInfo
 
 from typing import Any, Optional
 
 import aiohttp
 
-from rose.model import (
-    HeliotropeGalleryInfo,
-    HeliotropeImages,
-    HeliotropeInfo,
-    HeliotropeList,
-    HeliotropeRanking,
-)
+BASE_URL = "https://beta.doujinshiman.ga/"
+API_VERSION = "v4"
 
 
 class Client:
-    def __init__(self, authorization: str):
-        self.authorization = authorization
+    def __init__(self, hiyobot: str):
+        self.hiyobot = hiyobot
 
     async def request(
         self, method: str, path: str, json: Optional[dict[str, Any]] = None
     ) -> Any:
-        headers = {"Authorization": self.authorization}
-        url = "https://doujinshiman.ga/" + "v3" + path
+        headers = {"hiyobot": self.hiyobot}
         async with aiohttp.ClientSession() as cs:
             async with cs.request(method, url, headers=headers, json=json) as r:
                 response = await r.json()
