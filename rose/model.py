@@ -1,59 +1,42 @@
 from __future__ import annotations
+from rose.decorators import change_warn
 
-from typing import Any, Iterator, Optional
+from typing import Any, List, Literal, Optional
 
 
-class HeliotropeFile:
-    def __init__(self, **file: Any) -> None:
+class File:
+    def __init__(self, **file) -> None:
         self.__file = file
-        self.__width = file["width"]
-        self.__hash = file["hash"]
-        self.__haswebp = file["haswebp"]
-        self.__hasavifsmalltn = file["hasavifsmalltn"]
-        self.__name = file["name"]
-        self.__height = file["height"]
-        self.__hasavif = file["hasavif"]
-
-    def to_dict(self) -> dict[str, Any]:
-        return self.__file
 
     @property
     def width(self) -> str:
-        return self.__width
+        return self.__file["width"]
 
     @property
     def hash(self) -> str:
-        return self.__hash
+        return self.__file["hash"]
 
     @property
-    def haswebp(self) -> Optional[bool]:
-        return bool(self.__haswebp)
+    def haswebp(self) -> str:
+        return self.__file["haswebp"]
 
     @property
-    def hasavifsmalltn(self) -> Optional[bool]:
-        return bool(self.__hasavifsmalltn)
+    def hasavifsmalltn(self) -> str:
+        return self.__file["hasavifmallfn"]
 
     @property
     def name(self) -> str:
-        return self.__name
+        return self.__file["name"]
 
     @property
     def height(self) -> str:
-        return self.__height
+        return self.__file["height"]
 
     @property
-    def hasavif(self) -> Optional[bool]:
-        return bool(self.__hasavif)
-
-    @classmethod
-    def parsing_generator(
-        cls, value_datas: dict[str, list[dict[str, str]]], key: str
-    ) -> Iterator[HeliotropeFile]:
-        for value_data in value_datas[key]:
-            yield cls(**value_data)
+    def hasavif(self) -> str:
+        return self.__file["hasavif"]
 
 
-class HeliotropeValueData:
     def __init__(self, **tag: Any) -> None:
         self.__tag = tag
         self.__value = tag["value"]
