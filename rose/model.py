@@ -37,21 +37,17 @@ class File:
         return self.__file["hasavif"]
 
 
+class Tag:
     def __init__(self, **tag: Any) -> None:
         self.__tag = tag
-        self.__value = tag["value"]
-        self.__url = tag["url"]
-
-    def to_dict(self) -> dict[str, Any]:
-        return self.__tag
 
     @property
     def value(self) -> str:
-        return self.__value
+        return self.__tag["value"]
 
     @property
     def url(self) -> str:
-        return self.__url
+        return self.__tag["url"]
 
 
 class HeliotropeImage:
