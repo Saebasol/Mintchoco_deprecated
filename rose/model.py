@@ -50,23 +50,25 @@ class Tag:
         return self.__tag["url"]
 
 
-class HeliotropeImage:
-    def __init__(self, **image: Any) -> None:
-        self.__image = image
-        self.__url = image["url"]
-        self.__filename = image["filename"]
-
-    def to_dict(self) -> dict[str, Any]:
-        return self.__image
+class RawTag:
+    def __init__(self, **raw_tag: Any) -> None:
+        self.__raw_tag = raw_tag
 
     @property
-    def filename(self) -> str:
-        return self.__filename
+    def male(self) -> Literal["", "1"]:
+        return self.__raw_tag["male"]
+
+    @property
+    def female(self) -> Literal["", "1"]:
+        return self.__raw_tag["female"]
+
+    @property
+    def tag(self) -> str:
+        return self.__raw_tag["tag"]
 
     @property
     def url(self) -> str:
-        return self.__url
-
+        return self.__raw_tag["url"]
 
 class HeliotropeGalleryInfo:
     def __init__(self, **data: Any) -> None:
