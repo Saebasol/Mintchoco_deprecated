@@ -70,34 +70,16 @@ class RawTag:
     def url(self) -> str:
         return self.__raw_tag["url"]
 
-class HeliotropeGalleryInfo:
-    def __init__(self, **data: Any) -> None:
-        self.__data = data
-        self.__status = data["status"]
-        self.__language_localname = data["language_localname"]
-        self.__language = data["language"]
-        self.__date = data["date"]
-        self.__files = data["files"]
-        self.__tags = data["tags"]
-        self.__japanese_title = data["japanese_title"]
-        self.__title = data["title"]
-        self.__id = data["id"]
-        self.__type = data["type"]
 
-    def to_dict(self) -> dict[str, Any]:
-        return self.__data
+class BaseHeliotrope:
+    def __init__(self, **response) -> None:
+        self.__response = response
 
     @property
-    def status(self) -> int:
-        return self.__status
+    def status(self) -> Optional[int]:
+        return self.__response.get("status")
 
-    @property
-    def language_localname(self) -> str:
-        return self.__language_localname
 
-    @property
-    def language(self) -> str:
-        return self.__language
 
     @property
     def date(self) -> str:
