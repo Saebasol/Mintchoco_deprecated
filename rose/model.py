@@ -80,24 +80,19 @@ class BaseHeliotrope:
         return self.__response.get("status")
 
 
+class HeliotropeFile:
+    def __init__(self, **file: Any) -> None:
+        self.__file = file
 
     @property
-    def date(self) -> str:
-        return self.__date
+    def name(self):
+        return self.__file["name"]
 
     @property
-    def files(self) -> Iterator[HeliotropeFile]:
-        for file in self.__files:
-            yield HeliotropeFile(**file)
+    def image(self):
+        return self.__file["image"]
 
-    @property
-    def tags(self) -> Iterator[HeliotropeValueData]:
-        for tag in self.__tags:
-            yield HeliotropeValueData(**tag)
 
-    @property
-    def japanese_title(self) -> Optional[str]:
-        return self.__japanese_title
 
     @property
     def title(self) -> str:
