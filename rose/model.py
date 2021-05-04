@@ -114,18 +114,19 @@ class HeliotropeAbout(BaseHeliotrope):
         return self.__response["server_status"]
 
 
+class HeliotropeCount(BaseHeliotrope):
+    def __init__(self, **response: Any) -> None:
+        super().__init__(**response)
 
     @property
-    def status(self) -> int:
-        return self.__status
+    def total(self) -> int:
+        return self.__response["total"]
 
     @property
-    def title(self) -> HeliotropeValueData:
-        return HeliotropeValueData(**self.__title)
+    @change_warn
+    def list(self) -> List[dict[str, Any]]:
+        return self.__response["list"]
 
-    @property
-    def galleryid(self) -> str:
-        return self.__galleryid
 
     @property
     def thumbnail(self) -> str:
