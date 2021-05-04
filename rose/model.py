@@ -93,37 +93,27 @@ class HeliotropeFile:
         return self.__file["image"]
 
 
+class HeliotropeAbout(BaseHeliotrope):
+    def __init__(self, **response: Any) -> None:
+        super().__init__(**response)
 
     @property
-    def title(self) -> str:
-        return self.__title
+    def last_checked_time(self) -> str:
+        return self.__response["last_checked_time"]
 
     @property
-    def id(self) -> str:
-        return self.__id
+    def last_mirrored_time(self) -> str:
+        return self.__response["last_mirrored_time"]
 
     @property
-    def type(self) -> str:
-        return self.__type
+    def new_time(self) -> str:
+        return self.__response["new_time"]
+
+    @property
+    def server_status(self) -> str:
+        return self.__response["server_status"]
 
 
-class HeliotropeInfo:
-    def __init__(self, **data: Any) -> None:
-        self.__data = data
-        self.__status = data["status"]
-        self.__title = data["title"]
-        self.__galleryid = data["galleryid"]
-        self.__thumbnail = data["thumbnail"]
-        self.__artist = data["artist"]
-        self.__group = data["group"]
-        self.__type = data["type"]
-        self.__language = data["language"]
-        self.__series = data["series"]
-        self.__characters = data["characters"]
-        self.__tags = data["tags"]
-
-    def to_dict(self) -> dict[str, Any]:
-        return self.__data
 
     @property
     def status(self) -> int:
