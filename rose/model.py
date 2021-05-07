@@ -128,52 +128,51 @@ class HeliotropeCount(BaseHeliotrope):
         return self.__response["list"]
 
 
-    @property
-    def thumbnail(self) -> str:
-        return self.__thumbnail
+class HeliotropeGalleryInfo(BaseHeliotrope):
+    def __init__(self, is_raw: bool = False, **response: Any) -> None:
+        self.is_raw = is_raw
+        super().__init__(**response)
 
     @property
-    def artist(self) -> Iterator[HeliotropeValueData]:
-        for artist_value in self.__artist:
-            yield HeliotropeValueData(**artist_value)
+    def language_localname(self) -> str:
+        return self.__response["language_localname"]
 
     @property
-    def group(self) -> Iterator[HeliotropeValueData]:
-        for group_value in self.__group:
-            yield HeliotropeValueData(**group_value)
+    def language(self) -> str:
+        return self.__response["language"]
 
     @property
-    def type(self) -> HeliotropeValueData:
-        return HeliotropeValueData(**self.__type)
+    def date(self) -> str:
+        return self.__response["date"]
 
     @property
-    def language(self) -> HeliotropeValueData:
-        return HeliotropeValueData(**self.__language)
+    def files(self) -> list[Optional[File]]:
+        return list(map(lambda file: File(**file), self.__response["files"]))
 
     @property
-    def series(self) -> Iterator[HeliotropeValueData]:
-        for series_value in self.__series:
-            yield HeliotropeValueData(**series_value)
+    def tags(self) -> list[Optional[Tag | RawTag]]:
+        if self.is_raw:
+            return list(map(lambda tag: RawTag(**tag), self.__response["tags"]))
+
+        return list(map(lambda tag: Tag(**tag), self.__response["tags"]))
 
     @property
-    def characters(self) -> Iterator[HeliotropeValueData]:
-        for character in self.__characters:
-            yield HeliotropeValueData(**character)
+    def japanese_title(self) -> Optional[str]:
+        return self.__response["japanese_title"]
 
     @property
-    def tags(self) -> Iterator[HeliotropeValueData]:
-        for tag in self.__tags:
-            yield HeliotropeValueData(**tag)
+    def title(self) -> str:
+        return self.__response["title"]
+
+    @property
+    def id(self) -> str:
+        return self.__response["id"]
+
+    @property
+    def type(self) -> str:
+        return self.__response["type"]
 
 
-class HeliotropeList:
-    def __init__(self, **data: Any) -> None:
-        self.__data = data
-        self.__status: int = data["status"]
-        self.__list = data["list"]
-
-    def to_dict(self) -> dict[str, Any]:
-        return self.__data
 
     @property
     def status(self) -> int:
