@@ -6,10 +6,10 @@ with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
 setup(
-    name="Peppermint",
+    name="mintchoco",
     author="Ryu ju heon",
     author_email="SaidBySolo@gmail.com",
-    url="https://github.com/SaidBySolo/Peppermint",
+    url="https://github.com/SaidBySolo/Mintchoco",
     version="1.0.0",
     long_description=open("README.md", "rt", encoding="UTF8").read(),
     packages=setuptools.find_packages(),  # type: ignore
