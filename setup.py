@@ -10,7 +10,7 @@ setup(
     author="Ryu ju heon",
     author_email="SaidBySolo@gmail.com",
     url="https://github.com/SaidBySolo/Peppermint",
-    version="4.0.0",
+    version="1.0.0",
     long_description=open("README.md", "rt", encoding="UTF8").read(),
     packages=setuptools.find_packages(),  # type: ignore
     description="Heliotrope python wrapper",
