@@ -1,4 +1,8 @@
 from __future__ import annotations
+
+from typing import Any, Optional
+
+import aiohttp
 from rose.model import (
     BaseHeliotrope,
     HeliotropeAbout,
@@ -9,10 +13,6 @@ from rose.model import (
     HeliotropeList,
     HeliotropeSearch,
 )
-
-from typing import Any, Optional
-
-import aiohttp
 
 BASE_URL = "https://beta.doujinshiman.ga/"
 API_VERSION = "v4"
