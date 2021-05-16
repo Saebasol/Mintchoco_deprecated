@@ -1,5 +1,4 @@
 from __future__ import annotations
-from rose.decorators import change_warn
 
 from typing import Any, List, Literal, Optional
 
@@ -49,6 +48,10 @@ class Tag:
     def url(self) -> str:
         return self.__tag["url"]
 
+    @classmethod
+    def to_tag(cls, list_element: list[dict[str, Any]]):
+        return list(map(lambda tag: cls(**tag), list_element))
+
 
 class RawTag:
     def __init__(self, **raw_tag: Any) -> None:
@@ -71,13 +74,30 @@ class RawTag:
         return self.__raw_tag["url"]
 
 
+class Count:
+    def __init__(self, **count) -> None:
+        self._count = count
+
+    @property
+    def index(self) -> int:
+        return self._count["index"]
+
+    @property
+    def title(self) -> str:
+        return self._count["title"]
+
+    @property
+    def count(self) -> int:
+        return self._count["count"]
+
+
 class BaseHeliotrope:
     def __init__(self, **response) -> None:
-        self.__response = response
+        self._response = response
 
     @property
     def status(self) -> Optional[int]:
-        return self.__response.get("status")
+        return self._response.get("status")
 
 
 class HeliotropeFile:
@@ -99,19 +119,19 @@ class HeliotropeAbout(BaseHeliotrope):
 
     @property
     def last_checked_time(self) -> str:
-        return self.__response["last_checked_time"]
+        return self._response["last_checked_time"]
 
     @property
     def last_mirrored_time(self) -> str:
-        return self.__response["last_mirrored_time"]
+        return self._response["last_mirrored_time"]
 
     @property
     def new_time(self) -> str:
-        return self.__response["new_time"]
+        return self._response["new_time"]
 
     @property
     def server_status(self) -> str:
-        return self.__response["server_status"]
+        return self._response["server_status"]
 
 
 class HeliotropeCount(BaseHeliotrope):
@@ -120,12 +140,11 @@ class HeliotropeCount(BaseHeliotrope):
 
     @property
     def total(self) -> int:
-        return self.__response["total"]
+        return self._response["total"]
 
     @property
-    @change_warn
-    def list(self) -> List[dict[str, Any]]:
-        return self.__response["list"]
+    def list(self):
+        return list(map(lambda count: Count(**count), self._response["list"]))
 
 
 class HeliotropeGalleryInfo(BaseHeliotrope):
@@ -135,103 +154,117 @@ class HeliotropeGalleryInfo(BaseHeliotrope):
 
     @property
     def language_localname(self) -> str:
-        return self.__response["language_localname"]
+        return self._response["language_localname"]
 
     @property
     def language(self) -> str:
-        return self.__response["language"]
+        return self._response["language"]
 
     @property
     def date(self) -> str:
-        return self.__response["date"]
+        return self._response["date"]
 
     @property
     def files(self) -> list[Optional[File]]:
-        return list(map(lambda file: File(**file), self.__response["files"]))
+        return list(map(lambda file: File(**file), self._response["files"]))
 
     @property
-    def tags(self) -> list[Optional[Tag | RawTag]]:
+    def tags(self) -> list[Tag] | list[RawTag]:
         if self.is_raw:
-            return list(map(lambda tag: RawTag(**tag), self.__response["tags"]))
+            return list(map(lambda tag: RawTag(**tag), self._response["tags"]))
 
-        return list(map(lambda tag: Tag(**tag), self.__response["tags"]))
+        return Tag.to_tag(self._response["tags"])
 
     @property
     def japanese_title(self) -> Optional[str]:
-        return self.__response["japanese_title"]
+        return self._response["japanese_title"]
 
     @property
     def title(self) -> str:
-        return self.__response["title"]
+        return self._response["title"]
 
     @property
     def id(self) -> str:
-        return self.__response["id"]
+        return self._response["id"]
 
     @property
     def type(self) -> str:
-        return self.__response["type"]
+        return self._response["type"]
 
 
-
-    @property
-    def status(self) -> int:
-        return self.__status
-
-    @property
-    def list(self) -> Iterator[HeliotropeInfo]:
-        for list_value in self.__list:
-            yield HeliotropeInfo(**list_value)
-
-
-class HeliotropeImages:
-    def __init__(self, **data: Any) -> None:
-        self.__data = data
-        self.__status = data["status"]
-        self.__images = data["images"]
-
-    def to_dict(self) -> dict[str, Any]:
-        return self.__data
+class HeliotropeImages(BaseHeliotrope):
+    def __init__(self, **response: Any) -> None:
+        super().__init__(**response)
 
     @property
-    def status(self) -> int:
-        return self.__status
+    def files(self):
+        return list(map(lambda file: HeliotropeFile(**file), self._response["files"]))
+
+
+class HeliotropeInfo(BaseHeliotrope):
+    def __init__(self, **response: Any) -> None:
+        super().__init__(**response)
 
     @property
-    def images(self) -> Iterator[HeliotropeImage]:
-        for image in self.__images:
-            yield HeliotropeImage(**image)
-
-
-class HeliotropeRankingInfo:
-    def __init__(self, **data: Any) -> None:
-        self.__index = data["index"]
-        self.__count = data["count"]
+    def index(self):
+        return self._response.get("index")
 
     @property
-    def index(self) -> str:
-        return self.__index
+    def title(self):
+        return self._response["title"]
 
     @property
-    def count(self) -> int:
-        return self.__count
-
-
-class HeliotropeRanking:
-    def __init__(self, **data: Any) -> None:
-        self.__count = data["total"]
-        self.__list = data["list"]
-        self.__month = data["month"]
+    def thumbnail(self):
+        return self._response["thumbnail"]
 
     @property
-    def count(self) -> int:
-        return self.__count
+    def artist(self):
+        return Tag.to_tag(self._response["artist"])
 
     @property
-    def ranking(self) -> HeliotropeRankingInfo:
-        for info in self.__list:
-            yield HeliotropeRankingInfo(**info)
+    def group(self):
+        return Tag.to_tag(self._response["group"])
 
     @property
-    def month(self) -> int:
-        return self.__month
+    def type(self):
+        return Tag.to_tag(self._response["type"])
+
+    @property
+    def language(self):
+        return Tag.to_tag(self._response["language"])
+
+    @property
+    def series(self):
+        return Tag.to_tag(self._response["series"])
+
+    @property
+    def characters(self):
+        return Tag.to_tag(self._response["characters"])
+
+    @property
+    def tags(self):
+        return Tag.to_tag(self._response["tags"])
+
+
+class HeliotropeSearch(BaseHeliotrope):
+    def __init__(self, **response) -> None:
+        super().__init__(**response)
+
+    @property
+    def result(self):
+        return list(
+            map(lambda result: HeliotropeInfo(**result), self._response["result"])
+        )
+
+    @property
+    def count(self):
+        return self._response["count"]
+
+
+class HeliotropeList(BaseHeliotrope):
+    def __init__(self, **response) -> None:
+        super().__init__(**response)
+
+    @property
+    def list(self):
+        return list(map(lambda info: HeliotropeInfo(**info), self._response["list"]))
