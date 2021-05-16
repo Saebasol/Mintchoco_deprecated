@@ -12,6 +12,7 @@ setup(
     url="https://github.com/SaidBySolo/Mintchoco",
     version="1.0.0",
     long_description=open("README.md", "rt", encoding="UTF8").read(),
+    long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),  # type: ignore
     description="Heliotrope python wrapper",
     install_requires=requirements,
