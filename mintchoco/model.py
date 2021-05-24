@@ -126,8 +126,8 @@ class HeliotropeAbout(BaseHeliotrope):
         return self._response["last_mirrored_time"]
 
     @property
-    def new_time(self) -> str:
-        return self._response["new_time"]
+    def new_item(self) -> str:
+        return self._response["new_item"]
 
     @property
     def server_status(self) -> str:
