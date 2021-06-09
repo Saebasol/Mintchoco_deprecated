@@ -66,6 +66,6 @@ class Client:
     async def search(self, query: str, offset=0) -> HeliotropeSearch:
         return HeliotropeSearch(
             **await self.request(
-                "POST", f"/api/hitomi/search?q={query}&offset={offset}"
+                "GET", f"/api/hitomi/search?q={query}&offset={offset}"
             )
         )
