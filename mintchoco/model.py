@@ -227,11 +227,11 @@ class HeliotropeInfo(BaseHeliotrope):
 
     @property
     def type(self):
-        return Tag.to_tag(self._response["type"])
+        return Tag(**self._response["type"])
 
     @property
     def language(self):
-        return Tag.to_tag(self._response["language"])
+        return Tag(**self._response["language"])
 
     @property
     def series(self):
