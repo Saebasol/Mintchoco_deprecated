@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Optional
+from types import TracebackType
 
 from aiohttp.client import ClientSession
 from mintchoco.model import (
@@ -48,7 +49,12 @@ class Client:
     async def __aenter__(self) -> "Client":
         return self
 
-    async def __aexit__(self) -> None:
+    async def __aexit__(
+        self,
+        exc_type: Optional[type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> None:
         if self.client_session:
             await self.client_session.close()
 
