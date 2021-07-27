@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from typing import Any, List, Literal, Optional
+from typing import Any, List,  Literal, Optional
 
 
 class File:
-    def __init__(self, **file) -> None:
+    def __init__(self, **file: Any) -> None:
         self.__file = file
 
     @property
@@ -75,7 +75,7 @@ class RawTag:
 
 
 class Count:
-    def __init__(self, **count) -> None:
+    def __init__(self, **count:Any) -> None:
         self._count = count
 
     @property
@@ -92,12 +92,12 @@ class Count:
 
 
 class BaseHeliotrope:
-    def __init__(self, **response) -> None:
+    def __init__(self, **response:Any) -> None:
         self._response = response
 
     @property
-    def status(self) -> Optional[int]:
-        return self._response.get("status")
+    def status(self) -> int:
+        return self._response["status"]
 
 
 class HeliotropeFile:
@@ -105,11 +105,11 @@ class HeliotropeFile:
         self.__file = file
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self.__file["name"]
 
     @property
-    def image(self):
+    def image(self) -> str:
         return self.__file["image"]
 
 
@@ -143,13 +143,12 @@ class HeliotropeCount(BaseHeliotrope):
         return self._response["total"]
 
     @property
-    def list(self):
+    def list(self) -> List[Count]:
         return list(map(lambda count: Count(**count), self._response["list"]))
 
 
 class HeliotropeGalleryInfo(BaseHeliotrope):
-    def __init__(self, is_raw: bool = False, **response: Any) -> None:
-        self.is_raw = is_raw
+    def __init__(self,  **response: Any) -> None:
         super().__init__(**response)
 
     @property
@@ -165,15 +164,16 @@ class HeliotropeGalleryInfo(BaseHeliotrope):
         return self._response["date"]
 
     @property
-    def files(self) -> list[Optional[File]]:
+    def files(self) -> list[File]:
         return list(map(lambda file: File(**file), self._response["files"]))
 
     @property
-    def tags(self) -> list[Tag] | list[RawTag]:
-        if self.is_raw:
-            return list(map(lambda tag: RawTag(**tag), self._response["tags"]))
-
+    def tags(self) -> list[Tag]:
         return Tag.to_tag(self._response["tags"])
+
+    @property
+    def rawtags(self) -> list[RawTag]:
+        return list(map(lambda tag: RawTag(**tag), self._response["tags"]))
 
     @property
     def japanese_title(self) -> Optional[str]:
@@ -206,65 +206,65 @@ class HeliotropeInfo(BaseHeliotrope):
         super().__init__(**response)
 
     @property
-    def index(self):
-        return self._response.get("index")
+    def index(self) -> int:
+        return self._response["index"]
 
     @property
-    def title(self):
+    def title(self) -> str:
         return self._response["title"]
 
     @property
-    def thumbnail(self):
+    def thumbnail(self) -> str:
         return self._response["thumbnail"]
 
     @property
-    def artist(self):
+    def artist(self) -> list[Tag]:
         return Tag.to_tag(self._response["artist"])
 
     @property
-    def group(self):
+    def group(self)-> list[Tag]:
         return Tag.to_tag(self._response["group"])
 
     @property
-    def type(self):
+    def type(self) -> Tag:
         return Tag(**self._response["type"])
 
     @property
-    def language(self):
+    def language(self) -> Tag:
         return Tag(**self._response["language"])
 
     @property
-    def series(self):
+    def series(self)-> list[Tag]:
         return Tag.to_tag(self._response["series"])
 
     @property
-    def characters(self):
+    def characters(self)-> list[Tag]:
         return Tag.to_tag(self._response["characters"])
 
     @property
-    def tags(self):
+    def tags(self)-> list[Tag]:
         return Tag.to_tag(self._response["tags"])
 
 
 class HeliotropeSearch(BaseHeliotrope):
-    def __init__(self, **response) -> None:
+    def __init__(self, **response:Any) -> None:
         super().__init__(**response)
 
     @property
-    def result(self):
+    def result(self)-> list[HeliotropeInfo]:
         return list(
             map(lambda result: HeliotropeInfo(**result), self._response["result"])
         )
 
     @property
-    def count(self):
+    def count(self) -> int:
         return self._response["count"]
 
 
 class HeliotropeList(BaseHeliotrope):
-    def __init__(self, **response) -> None:
+    def __init__(self, **response:Any) -> None:
         super().__init__(**response)
 
     @property
-    def list(self):
+    def list(self) -> List[HeliotropeInfo]:
         return list(map(lambda info: HeliotropeInfo(**info), self._response["list"]))
