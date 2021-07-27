@@ -3,10 +3,6 @@ from setuptools import setup  # type: ignore
 
 import mintchoco
 
-requirements = []
-with open("requirements.txt") as f:
-    requirements = f.read().splitlines()
-
 setup(
     name="mintchoco",
     author="Ryu ju heon",
@@ -17,6 +13,5 @@ setup(
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),  # type: ignore
     description="Heliotrope python wrapper",
-    install_requires=requirements,
-    python_requires=">=3.6",
+    python_requires=">=3.9",
 )
