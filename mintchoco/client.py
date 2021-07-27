@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-import aiohttp
+from aiohttp.client import ClientSession
 from mintchoco.model import (
     BaseHeliotrope,
     HeliotropeAbout,
@@ -21,8 +21,13 @@ API_URL = BASE_URL + API_VERSION
 
 
 class Client:
-    def __init__(self, hiyobot: Optional[str] = None):
-        self.hiyobot = {"hiyobot": hiyobot}
+    def __init__(
+        self,
+        hiyobot: Optional[str] = None,
+        client_session: Optional[ClientSession] = None,
+    ) -> None:
+        self.hiyobot = hiyobot
+        self.client_session = client_session
 
     async def request(
         self, method: str, path: str, json: Optional[dict[str, Any]] = None
@@ -31,12 +36,21 @@ class Client:
         if "api" in path:
             url = API_URL + path
 
-        if not self.hiyobot["hiyobot"] and "count" in path:
-            raise RuntimeError("This endpoint required key")
+        if not self.client_session:
+            self.client_session = ClientSession()
 
-        async with aiohttp.ClientSession() as cs:
-            async with cs.request(method, url, headers=self.hiyobot, json=json) as r:
-                return await r.json()
+        if self.hiyobot:
+            self.client_session.headers.update({"hiyobot": self.hiyobot})
+
+        async with self.client_session.request(method, url, json=json) as r:
+            return await r.json()
+
+    async def __aenter__(self) -> "Client":
+        return self
+
+    async def __aexit__(self) -> None:
+        if self.client_session:
+            await self.client_session.close()
 
     async def about(self) -> HeliotropeAbout:
         return HeliotropeAbout(**await self.request("GET", "about?json=true"))
@@ -65,7 +79,7 @@ class Client:
     async def list(self, number: int) -> HeliotropeList:
         return HeliotropeList(**await self.request("GET", f"/api/hitomi/list/{number}"))
 
-    async def search(self, query: str, offset=0) -> HeliotropeSearch:
+    async def search(self, query: str, offset: int = 0) -> HeliotropeSearch:
         return HeliotropeSearch(
             **await self.request("GET", f"/api/hitomi/search?q={query}&offset={offset}")
         )
