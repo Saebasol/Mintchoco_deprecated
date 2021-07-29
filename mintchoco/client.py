@@ -15,7 +15,7 @@ from mintchoco.model import (
     HeliotropeSearch,
 )
 
-BASE_URL = "https://beta.doujinshiman.ga/"
+BASE_URL = "https://heliotrope.me/"
 API_VERSION = "v4"
 
 API_URL = BASE_URL + API_VERSION
