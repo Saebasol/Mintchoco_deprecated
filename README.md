@@ -1,5 +1,7 @@
 # Mintchoco
 
+**Warning** Deprecated in 5.0.0
+
 > Heliotrope's Python wrapper
 
 ## Badge
